@@ -14,7 +14,7 @@
                 <el-menu-item index="2">我的发布</el-menu-item>
                 <el-menu-item index="3">回收站</el-menu-item>
                 <el-menu-item index="4" disabled>消息中心</el-menu-item>
-                <el-menu-item index="5" class="rightBtn">退出登录</el-menu-item>
+                <el-menu-item index="5" class="rightBtn" @click="toLogin">退出登录</el-menu-item>
             </el-menu>
         </el-header>
     </el-container>
@@ -31,6 +31,13 @@ export default {
     methods: {
         handleSelect(key, keyPath) {
             console.log(key, keyPath);
+        },
+        toLogin(){
+            this.$message({
+                message: '退出登录成功',
+                type: 'success'
+            })
+            this.$router.push({path:'/login'})
         }
     }
 }

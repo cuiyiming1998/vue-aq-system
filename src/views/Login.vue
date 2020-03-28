@@ -1,4 +1,5 @@
 <template>
+<div :style="background" style="height:100%;width:100%">
     <div class="login-box">
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
             <h3 class="login-title">请登录</h3>
@@ -9,18 +10,24 @@
             <el-form-item label="密码" prop="password">
                 <el-input type="password" v-model="form.password" placeholder="请输入密码"></el-input>
             </el-form-item>
-            <el-form-item>
+            <div class="btns">
                 <el-button type="primary" @click="submitForm('form')">登录</el-button>
                 <el-button>注册</el-button>
-            </el-form-item>
+            </div>
         </el-form>
     </div>
+</div>
 </template>
 
 <script>
 export default {
     data() {
         return {
+            background:{
+                // backgroundImage: "url("+require("../assets/bg02.jpg")+")",
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: '100% 100%'
+            },
             form: {
             name: '',
             password: '',
@@ -69,11 +76,18 @@ export default {
         bottom: 0px;
         right: 0px;
         margin: auto;
+        background-color: white;
         border: 1px solid #DCDFE6;
         padding: 20px 50px 20px 30px;
         border-radius: 20px;
         box-shadow: 0px 0px 20px #DCDFE6;
         .login-title{
+            text-align: center;
+        }
+        .btns{
+            width: 100%;
+            height: 60px;
+            line-height: 60px;
             text-align: center;
         }
     }
