@@ -40,7 +40,6 @@ export default {
                 type: 'success'
             })
             this.$router.push({path:'/login'})
-            console.log(this.$store.state.userInfo);
         }
     }
 }

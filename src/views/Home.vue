@@ -7,6 +7,8 @@
 <script>
 import store from '@/store'
 import headerCom from '../components/Header'
+import newProgect from '../components/NewProgect'
+import projects from '../components/Projects'
 
 export default {
   store,
@@ -18,7 +20,12 @@ export default {
   methods: {
     },
   components:{
-    headerCom
+    headerCom,
+    newProgect,
+    projects
+  },
+  beforeMount: function(){
+
   }
 }
 </script>
