@@ -33,11 +33,13 @@ export default {
             console.log(key, keyPath);
         },
         toLogin(){
+            this.$store.commit('logout');
             this.$message({
                 message: '退出登录成功',
                 type: 'success'
             })
             this.$router.push({path:'/login'})
+            console.log(this.$store.state.userInfo);
         }
     }
 }

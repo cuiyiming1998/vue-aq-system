@@ -1,21 +1,35 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import state from './state'
-import getters from './getters'
-import mutations from './mutations'
-import actions from './actions'
+
 
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
     // data
-    state,
+    state:{
+        userInfo: window.localStorage.getItem('userInfo')
+    },
     // 计算属性
-    getters,
+    getters:{
+
+    },
     // methods
-    mutations,
+    mutations:{
+        // 获取用户的登录信息
+        setUserInfo: (state,value)=>{
+            state.userInfo = value;
+            window.localStorage.setItem('userInfo',value);
+        },
+        // 登出清除登录状态
+        logout:(state)=>{
+            state.userInfo = null;
+            window.localStorage.removeItem('userInfo');
+        }
+    },
     // 异步方法
-    actions,
+    actions:{
+
+    },
     // 模块
     modules:{
 

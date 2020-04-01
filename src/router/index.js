@@ -12,8 +12,8 @@ const routes = [
     name: 'Home',
     component: Home,
     meta: {
-      needLogin: true
-    }
+      requireLogin: true
+    },
   },
   {
     path: '/about',
@@ -31,6 +31,22 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+router.beforeEach((to,from,next)=>{
+  // 判断是否需要登录
+  if(to.matched.some(res=>res.meta.requireLogin)){
+    //设置1ms延迟，等待本地存储用户信息
+    let waitTime = window.setTimeout(()=>{
+      if(window.localStorage.getItem('userInfo')){
+        next()
+      }else{
+        next({path:'/login'})
+      }
+  },1)}
+  else{
+    next();
+  }
 })
 
 export default router
