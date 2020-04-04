@@ -40,7 +40,6 @@ export default {
         }
     },
     beforeMount:function(){
-        console.log(this.active)
     }
 }
 </script>
