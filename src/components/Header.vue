@@ -1,31 +1,28 @@
 <template>
-    <div>
-    <el-container>
-        <el-header height="60">
-            <el-menu
-                :default-active="activeIndex"
-                class="el-menu-demo"
-                mode="horizontal"
-                @select="handleSelect"
-                background-color="#545c64"
-                text-color="#fff"
-                active-text-color="#409eff">
-                <el-menu-item index="1">我的项目</el-menu-item>
-                <el-menu-item index="2">我的发布</el-menu-item>
-                <el-menu-item index="3">回收站</el-menu-item>
-                <el-menu-item index="4" disabled>消息中心</el-menu-item>
-                <el-menu-item index="5" class="rightBtn" @click="toLogin">退出登录</el-menu-item>
-            </el-menu>
-        </el-header>
-    </el-container>
-    </div>
+    <el-header height="70">
+        <el-menu
+            :default-active="activeIndex"
+            class="el-menu-demo"
+            mode="horizontal"
+            @select="handleSelect"
+            background-color="#545c64"
+            text-color="#fff"
+            active-text-color="#409eff">
+            <el-menu-item index="1">我的项目</el-menu-item>
+            <el-menu-item index="2">我的发布</el-menu-item>
+            <el-menu-item index="3">回收站</el-menu-item>
+            <el-menu-item index="4" disabled>消息中心</el-menu-item>
+            <el-menu-item index="5" class="rightBtn" @click="toLogin">退出登录</el-menu-item>
+        </el-menu>
+    </el-header>
 </template>
 
 <script>
 export default {
+    props:['active'],
     data() {
         return {
-            activeIndex: '1',
+            activeIndex: this.active.toString(),
         };
     },
     methods: {
@@ -33,7 +30,7 @@ export default {
             console.log(key, keyPath);
         },
         toLogin(){
-            //触发store中logout方法，清除本地存储状态
+            //清除本地存储
             this.$store.commit('logout');
             this.$message({
                 message: '退出登录成功',
@@ -41,15 +38,27 @@ export default {
             })
             this.$router.push({path:'/login'})
         }
+    },
+    beforeMount:function(){
+        console.log(this.active)
     }
 }
 </script>
 
 <style lang="scss" scoped>
     .el-header{
+        width: 100vw;
         padding: 0 0;
         .rightBtn{
             float: right;
         }
+    }
+    .el-menu-demo{
+        height: 70px;
+        line-height: 70px;
+    }
+    .el-menu--horizontal > .el-menu-item{
+        height: 70px;
+        line-height: 70px;
     }
 </style>

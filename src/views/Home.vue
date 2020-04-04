@@ -1,13 +1,15 @@
 <template>
   <div class="home">
-    <header-com></header-com>
+      <header-com :active="1"></header-com>
+      <new-project v-if="isSaved == false"></new-project>
+      <projects v-else></projects>
   </div>
 </template>
 
 <script>
 import store from '@/store'
 import headerCom from '../components/Header'
-import newProgect from '../components/NewProgect'
+import newProject from '../components/NewProject'
 import projects from '../components/Projects'
 
 export default {
@@ -15,13 +17,14 @@ export default {
   name: 'Home',
   data(){
     return {
+      isSaved: false,
     }
   },
   methods: {
-    },
+  },
   components:{
     headerCom,
-    newProgect,
+    newProject,
     projects
   },
   beforeMount: function(){
