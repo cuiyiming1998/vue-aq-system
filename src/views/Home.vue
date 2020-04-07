@@ -28,7 +28,9 @@ export default {
     projects
   },
   beforeMount: function(){
-
+    if(this.$store.state.projects){
+      this.isSaved = true
+    }
   }
 }
 </script>

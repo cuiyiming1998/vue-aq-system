@@ -9,32 +9,36 @@
                 <div class="main">
                     <ul class="questList" v-if="questInfo.length != 0">
                         <li v-for="(item,index) in questInfo" :key=index>
-                            <div style="text-align: center">
+                            <div class="title">
                                 <span>{{index+1}}.</span>
                                 <input class="questTitle" type="text" placeholder="请输入题目名称" v-model="questInfo[index].questTitle">
                             </div>
-                            <!-- 选中单选框 -->
-                            <div class="radio" v-if="questInfo[index].type == 'radio'">
-                                <div v-for="(i,k) in item.answers" :key=k >
-                                    <input type="radio" disabled> 
-                                    <input class="radios" type="text" v-model="questInfo[index].answers[k]">
+                            <div class="answer">
+                                <div v-for="(i,k) in item.answers" :key = k>
+                                    <input type="radio" disabled v-if="questInfo[index].type == 'radio'"> 
+                                    <input type="checkbox" disabled v-if="questInfo[index].type == 'checkbox'"> 
+                                    <input class="answers" type="text" v-model="questInfo[index].answers[k]">
                                 </div>
                             </div>
+                            <textarea name="textAns" id="textQuest" cols="20" rows="5" v-if="questInfo[index].type == 'text'"></textarea>
+                            <el-row class="questBtns">
+                                <el-button type="primary" class="delBtn" @click="removeQuest(index)" icon="el-icon-delete" circle></el-button>
+                            </el-row>
                         </li>
                     </ul>
                 </div>
                 <div class="footer" @click="changeOpts">
                     <div v-if="showOpt">
                         <el-button class="addBtns" @click="addOpts('radio')" plain>单选题</el-button>
-                        <el-button class="addBtns" plain>多选题</el-button>
-                        <el-button class="addBtns" plain>文字题</el-button>
+                        <el-button class="addBtns" @click="addOpts('checkbox')" plain>多选题</el-button>
+                        <el-button class="addBtns" @click="addOpts('text')" plain>文字题</el-button>
                     </div>
                     <div v-else>
                         <el-button class="showOpts" @click.stop="showOpts">添加问题</el-button>
                     </div>
                 </div>
                 <div class="btns">
-                    <el-button class="btn">保存问卷</el-button>
+                    <el-button class="btn" @click="saveQuest">保存问卷</el-button>
                     <el-button type="primary" class="btn publicBtn">发布问卷</el-button>
                 </div>
             </div>
@@ -85,6 +89,28 @@ export default {
                     type: type
                 })
             }
+        },
+        // 删除题目
+        removeQuest:function(i){
+            this.questInfo.splice(i,1);
+        },
+        // 保存问卷
+        saveQuest:function(){
+            if(this.projectName == ''){
+                this.$alert('请先输入问卷名称','问卷名称不能为空',{
+                    confirmButtonText: '好'
+                })
+            }else{
+                window.localStorage.setItem(this.projectName,this.projectName);
+                window.localStorage.setItem(this.projectName+'Content',JSON.stringify(this.questInfo));
+                this.$store.commit('updateProjects',this.projectName);
+            }
+        }
+    },
+    beforeMount:function(){
+        if(window.localStorage.getItem(this.projectName)){
+            this.projectName = window.localStorage.getItem(this.projectName);
+            this.questInfo = JSON.parse(window.localStorage.getItem(this.projectName+'Content'));
         }
     }
 }
@@ -124,20 +150,36 @@ export default {
                 margin-top: 20px;
                 margin-left: 10px;
                 margin-right: 10px;
+                .title{
+                    font-size: 2em;
+                }
                 .questList{
                     list-style-type: none;
+                    position:relative;
+                    padding-bottom: 10px;
                     .questTitle{
                         border: 0;
                         outline: none;
-                        font-size: 1rem;
-                        width: 600px;
-                        text-align: center;
+                        font-size: 1.2rem;
+                    }
+                    #textQuest{
+                        outline: none;
+                        font-size: 1em;
+                        width: 90%;
+                        margin: 5px auto;
+                    }
+                    .questBtns{
+                        height: 40px;
+                        line-height: 40px;
+                        display: flex;
+                        padding-right: 20px;
+                        justify-content: flex-end;
                     }
                 }
-                .radio{
+                .answer{
                     display: flex;
                     flex-direction: column;
-                    .radios{
+                    .answers{
                         height: 40px;
                         line-height: 40px;
                         font-size: 1rem;
@@ -155,7 +197,7 @@ export default {
                     animation: flash .2s linear;
                 }
                 .showOpts{
-                    width: 600px;
+                    width: 70%;
                 }
             }
             .btns{
@@ -163,9 +205,9 @@ export default {
                 display: flex;
                 justify-content: flex-end;
                 .btn{
-                    width: 100px;
+                    width: 15%;
                     height: 40px;
-                    margin-right: 50px;
+                    margin-right: 2em;
                 }
             }
         }

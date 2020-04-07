@@ -101,5 +101,27 @@ app.post('/signup',function(req,res){
     })
 })
 
+// get请求
+function get(sql,path){
+    app.get(path,(req,res)=>{
+        pool.query(sql,function(err,results){
+            if(err){
+                console.log(err);
+                res.send({
+                    code: 0,
+                    status: 'error'
+                })
+            }else{
+                res.send({
+                    code: 1,
+                    data: results
+                })
+            }
+        })
+    })
+}
+
+// 获取问卷
+get('/getQuestions','select * from projectName');
 
 app.listen(3000);
