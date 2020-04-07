@@ -27,7 +27,6 @@ const store = new Vuex.Store({
             window.localStorage.removeItem('userInfo');
         },
         updateProjects:(state,value)=>{
-            console.log(value)
             // 如果重新编辑
             if(value.code == 1){
                 state.projects[value.id] = value.content;
@@ -36,6 +35,12 @@ const store = new Vuex.Store({
             }
             window.localStorage.setItem('projects',JSON.stringify(state.projects))
         },
+        // 删除项目更新项目列表
+        delProject:(state,value)=>{
+            state.projects.splice(value,1);
+            window.localStorage.setItem('projects',JSON.stringify(state.projects));
+        },
+        // 刷新页面重新获取项目列表
         fresh: (state)=>{
             if(window.localStorage.getItem('projects')){
                 state.projects = JSON.parse(window.localStorage.getItem('projects'));

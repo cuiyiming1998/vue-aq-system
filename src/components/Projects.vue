@@ -10,6 +10,9 @@
                 <h2>
                     {{ item }}
                 </h2>
+                <el-row>
+                    <el-button type="danger" class="delBtn" @click.stop="delProject(index,item)">删除</el-button>
+                </el-row>
             </el-button>
         </div>
     </el-main>
@@ -39,10 +42,17 @@ export default {
                     id: index
                 }
             })
-        }
+        },
+        delProject:function(index,item){
+            this.$store.commit('delProject',index);
+            console.log(this.$store.projects);
+            if(this.$store.projects == undefined){
+                this.$parent.isSaved = false;
+            }
+        },
     },
     beforeMount(){
-        console.log(this.projects)
+        
     }
 }
 </script>
@@ -72,8 +82,17 @@ export default {
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
+                position: relative;
                 i{
                     font-size: 4em;
+                }
+                .el-row{
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    display: flex;
+                    justify-content: center;
+                    width: 100%;
                 }
             }
         }
