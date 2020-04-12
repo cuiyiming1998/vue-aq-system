@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import About from '../views/About.vue'
 import Login from '../views/Login'
 import Edit from '../views/Edit'
+import Refuse from '../views/Refuse'
 
 Vue.use(VueRouter)
 
@@ -30,6 +31,11 @@ const routes = [
     path:'/edit',
     name: 'Edit',
     component: Edit
+  },
+  {
+    path: '/refuse',
+    name: 'Refuse',
+    component: Refuse
   }
 ]
 

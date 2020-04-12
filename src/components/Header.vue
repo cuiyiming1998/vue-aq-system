@@ -9,8 +9,8 @@
             text-color="#fff"
             active-text-color="#409eff">
             <el-menu-item index="1" @click="toMain">我的项目</el-menu-item>
-            <el-menu-item index="2">我的发布</el-menu-item>
-            <el-menu-item index="3">回收站</el-menu-item>
+            <el-menu-item index="2" @click="toPublic">我的发布</el-menu-item>
+            <el-menu-item index="3" @click="toRefuse">回收站</el-menu-item>
             <el-menu-item index="4" disabled>消息中心</el-menu-item>
             <el-menu-item index="5" class="rightBtn" @click="Logout">退出登录</el-menu-item>
         </el-menu>
@@ -22,12 +22,11 @@ export default {
     props:['active'],
     data() {
         return {
-            activeIndex: this.active.toString(),
+            activeIndex: this.active.toString()
         };
     },
     methods: {
         handleSelect(key, keyPath) {
-            console.log(key, keyPath);
         },
         Logout(){
             //清除本地存储
@@ -39,7 +38,12 @@ export default {
             this.$router.push({path:'/login'})
         },
         toMain(){
-            this.$router.push({path: '/'})
+            this.$router.push({path: '/'});
+        },
+        toPublic(){
+        },
+        toRefuse(){
+            this.$router.push({path:'/refuse'})
         }
     },
     beforeMount:function(){

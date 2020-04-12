@@ -8,7 +8,8 @@ const store = new Vuex.Store({
     // data
     state:{
         userInfo: JSON.parse(window.localStorage.getItem('userInfo')),
-        projects: []
+        projects: JSON.parse(window.localStorage.getItem('projects'))?JSON.parse(window.localStorage.getItem('projects')):[],
+        delProjects: JSON.parse(window.localStorage.getItem('delProjects'))?JSON.parse(window.localStorage.getItem('delProjects')):[],
     },
     // 计算属性
     getters:{
@@ -45,6 +46,21 @@ const store = new Vuex.Store({
             if(window.localStorage.getItem('projects')){
                 state.projects = JSON.parse(window.localStorage.getItem('projects'));
             }
+        },
+        // 删除的项目进入回收站
+        toRefuse:(state,value) => {
+            state.delProjects.push(value);
+            window.localStorage.setItem('delProjects',JSON.stringify(state.delProjects));
+        },
+        // 恢复项目
+        resume:(state,value)=>{
+            state.delProjects.splice(value,1);
+            window.localStorage.setItem('delProjects',JSON.stringify(state.delProjects));
+        },
+        // 彻底删除
+        remove:(state,value)=>{
+            store.commit('resume',value.index);
+            window.localStorage.removeItem(value.name);
         }
     },
     // 异步方法

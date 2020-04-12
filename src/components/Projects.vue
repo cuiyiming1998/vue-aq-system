@@ -46,9 +46,16 @@ export default {
         delProject:function(index,item){
             this.$store.commit('delProject',index);
             if(JSON.parse(window.localStorage.getItem('projects')).length <1){
-                console.log(1)
                 this.$parent.isSaved = false;
             }
+            this.$store.commit('toRefuse',{
+                name: item,
+                time: new Date().toLocaleString()
+            });
+            this.$message({
+                message:'删除成功！您可以在回收站找到并恢复您的项目。',
+                type: 'success'
+            })
         },
     },
     beforeMount(){
