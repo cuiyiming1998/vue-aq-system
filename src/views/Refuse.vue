@@ -51,7 +51,8 @@ export default {
         remove(item,index){
             this.$confirm('此操作将不可恢复，确定删除吗？','提示',{
                 confirmButtonText: '是',
-                cancelButtonText: '取消'
+                cancelButtonText: '取消',
+                type: 'warning'
             }).then(()=>{
                 this.$store.commit('remove',{
                     name: item.name,
@@ -61,6 +62,8 @@ export default {
                     message: '删除成功！',
                     type: 'success'
                 })
+            }).catch(()=>{
+                
             })
         }
     },
