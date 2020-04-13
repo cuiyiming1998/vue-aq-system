@@ -121,7 +121,13 @@ function get(sql,path){
     })
 }
 
-// 获取问卷
-get('/getQuestions','select * from projectName');
+// 获取所有问卷信息
+
+app.get('/square',function(req,res){
+    const dataStr = ''
+        pool.query('select * from projects',(err,results)=>{
+            res.send(results);
+        })
+})
 
 app.listen(3000);

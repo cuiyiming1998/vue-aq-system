@@ -11,7 +11,7 @@
             <el-menu-item index="1" @click="toMain">我的项目</el-menu-item>
             <el-menu-item index="2" @click="toPublic">我的发布</el-menu-item>
             <el-menu-item index="3" @click="toRefuse">回收站</el-menu-item>
-            <el-menu-item index="4" disabled>消息中心</el-menu-item>
+            <el-menu-item index="4" @click="toSquare">问卷广场</el-menu-item>
             <el-menu-item index="5" class="rightBtn" @click="Logout">退出登录</el-menu-item>
         </el-menu>
     </el-header>
@@ -44,6 +44,9 @@ export default {
         },
         toRefuse(){
             this.$router.push({path:'/refuse'})
+        },
+        toSquare(){
+            this.$router.push({path:'/square'})
         }
     },
     beforeMount:function(){

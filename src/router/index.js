@@ -5,6 +5,7 @@ import About from '../views/About.vue'
 import Login from '../views/Login'
 import Edit from '../views/Edit'
 import Refuse from '../views/Refuse'
+import Square from '../views/Square'
 
 Vue.use(VueRouter)
 
@@ -36,6 +37,11 @@ const routes = [
     path: '/refuse',
     name: 'Refuse',
     component: Refuse
+  },
+  {
+    path: '/square',
+    name: 'Square',
+    component: Square
   }
 ]
 
