@@ -6,7 +6,7 @@
                 <li v-for="(item,index) in projects" :key=index>
                     <div class="items">
                         <div class="content">
-                            <p>{{item.projectName}}</p>
+                            <p @click="toAnswer(item.projectName,item.username)">{{item.projectName}}</p>
                             <span>
                                 <i class="el-icon-user"></i>
                                 发起者：{{item.username}}

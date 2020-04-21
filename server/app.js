@@ -237,42 +237,50 @@ app.post('/myPublic',function(req,res){
 // 点击参加问卷获取问卷信息
 app.get('/getProject',function(req,res){
     let result = '';
-    let resultProject = ''; // 项目信息
-    let resultAnswer = ''; // 选项信息
-    var resultQuestion = ''; // 问题信息
     let sql = '';
     let data = req.query;
     function getProject(){
         return new Promise(function(resolve,reject){
+            // 在projects表中查询问卷的信息
             sql = 'select * from projects where username=? and projectName=?';
             pool.query(sql,[data.username,data.projectName],(err,results)=>{
                 if(err){
-                    console.log(err)
+                    console.log(err);
+                    res.send({
+                        code: 0,
+                        status: 'error'
+                    });
                 }else{
-                    result = toDataArr(results)
-                    resolve()
+                    result = toDataArr(results);
+                    resolve();
                 }
             })
         })
     }
     getProject()
     .then(()=>{
-        resultProject = result[0];
+        // 通过获取projectId在questions表中查询问题信息
+        result = result[0];
         sql = 'select * from questions where projectId=?'
-        pool.query(sql,[resultProject.projectId],(err,results)=>{
+        pool.query(sql,[result.projectId],(err,results)=>{
             if(err){
-                console.log(err)
+                console.log(err);
+                res.send({
+                    data: 0,
+                    status: 'error'
+                })
             }else{
-                resultQuestion = toDataArr(results).reverse();
-                console.log(resultQuestion);
-                for(let i=0;i<resultQuestion.length;i++){
-                    sql = 'select * from options where questId=?'
-                    pool.query(sql,[resultQuestion[i].questId],(err,results)=>{
-                        resultAnswer = toDataArr(results).reverse();
-                    })
-                    console.log(resultAnswer);
+                result = toDataArr(results);
+                // 将问题信息中的answer解析成字符串
+                for(let i=0;i<result.length;i++){
+                    result[i].answers = JSON.parse(result[i].answers);
                 }
             }
+            res.send({
+                code: 1,
+                statis: 'success',
+                questions: result
+            });
         })
     })
 })
