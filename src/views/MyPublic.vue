@@ -13,7 +13,7 @@
                             </span>
                         </div>
                         <div class="btn">
-                            <el-button> 查看结果 </el-button>
+                            <el-button @click="toAnalyse(item.projectName)"> 查看结果 </el-button>
                         </div>
                     </div>
                 </li>
@@ -38,7 +38,15 @@ export default {
         }
     },
     methods:{
-
+        toAnalyse: function(projectName){
+            this.$router.push({
+                path:'/analyse',
+                query:{
+                    username: this.$store.state.userInfo.username,
+                    projectName: projectName
+                }
+            })
+        }
     },
     components:{
         headerCom

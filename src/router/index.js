@@ -7,6 +7,8 @@ import Edit from '../views/Edit'
 import Refuse from '../views/Refuse'
 import Square from '../views/Square'
 import MyPublic from '../views/MyPublic'
+import Analyse from '../views/Analyse'
+import Answer from '../views/Answer'
 
 Vue.use(VueRouter)
 
@@ -47,7 +49,17 @@ const routes = [
   {
     path: '/myPublic',
     name: 'MyPublic',
-    component: MyPublic
+    component: MyPublic,
+  },
+  {
+    path: '/analyse',
+    name: 'Analyse',
+    component: Analyse,
+  },
+  {
+    path: '/answer',
+    name: 'Answer',
+    component: Answer
   }
 ]
 

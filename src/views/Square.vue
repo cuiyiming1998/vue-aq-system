@@ -17,7 +17,7 @@
                             </span>
                         </div>
                         <div class="btn">
-                            <el-button> 立即参与 </el-button>
+                            <el-button @click="toAnswer(item.projectName,item.username)"> 立即参与 </el-button>
                         </div>
                     </div>
                 </li>
@@ -43,7 +43,15 @@ export default {
         }
     },
     methods:{
-
+        toAnswer(projectName,username){
+            this.$router.push({
+                path: '/answer',
+                query:{
+                    projectName: projectName,
+                    username: username
+                }
+            })
+        }
     },
     components:{
         headerCom
