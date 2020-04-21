@@ -203,11 +203,43 @@ app.post('/public',function(req,res){
 // 获取所有问卷信息
 
 app.get('/square',function(req,res){
-    const dataStr = ''
-        pool.query('select * from projects',(err,results)=>{
-            results = results.reverse();
-            res.send(results);
+    pool.query('select * from projects',(err,results)=>{
+        results = results.reverse();
+        res.send(results);
+    })
+})
+
+// 获取我的发布
+
+app.post('/myPublic',function(req,res){
+    let publicData = ''
+    req.on('data',function(data){
+        publicData = JSON.parse(data);
+    })
+    req.on('end',function(data){
+        pool.query('select * from projects where username=?',[publicData.username],(err,results)=>{
+            if(err){
+                console.log(err);
+                res.send({
+                    code: 0,
+                    status: 'error'
+                })
+            }else if(results == ''){
+                // 用户未发表问卷，查询为空
+                res.send({
+                    code: 2,
+                    status: 'null'
+                })
+            }else{
+                let result = toDataArr(results).reverse();
+                res.send({
+                    code: 1,
+                    status: 'success',
+                    publicData: result
+                })
+            }
         })
+    })
 })
 
 

@@ -1,45 +1,40 @@
 <template>
     <div>
-        <header-com :active="4"></header-com>
-        <div class="main">
+        <header-com :active="2"></header-com>
+        <div class="main" v-if="isPublic">
             <ul>
                 <li v-for="(item,index) in projects" :key=index>
                     <div class="items">
                         <div class="content">
                             <p>{{item.projectName}}</p>
                             <span>
-                                <i class="el-icon-user"></i>
-                                发起者：{{item.username}}
-                            </span>
-                            <span>
                                 <i class="el-icon-time"></i>
-                                时间：{{item.time}}
+                                {{item.time}}
                             </span>
                         </div>
                         <div class="btn">
-                            <el-button> 立即参与 </el-button>
+                            <el-button> 查看结果 </el-button>
                         </div>
                     </div>
                 </li>
             </ul>
-            <div class="block">
-                <el-pagination
-                    layout="prev, pager, next"
-                    :total="1">
-                </el-pagination>
-            </div>
+        </div>
+        <div class="tip" v-else>
+            <h1>您还没有发布过项目哦</h1>
+            <h2>快去创建并发布吧</h2>
         </div>
     </div>
 </template>
 
 <script>
-import axios from 'axios'
 import headerCom from '../components/Header'
+import axios from 'axios'
 
 export default {
     data(){
         return {
-            projects:[]
+            projects:[], // 获取的问卷列表
+            isPublic: true // 用户是否有发布的问卷
         }
     },
     methods:{
@@ -48,13 +43,21 @@ export default {
     components:{
         headerCom
     },
-    beforeMount(){
-        const self = this;
+    beforeCreate(){
+        let self = this;
         axios({
-            method: 'get',
-            url: '/square',
+            method: 'post',
+            url: '/myPublic',
+            data:{
+                username:self.$store.state.userInfo.username
+            }
         }).then((res)=>{
-            self.projects = res.data;
+            if(res.data.code == 1){
+                self.projects =  res.data.publicData;
+                self.isPublic = true;
+            }else{
+                self.isPublic = false;
+            }
         })
     }
 }
@@ -65,6 +68,7 @@ export default {
         margin: 0 auto;
         width: 80%;
         background-color: white;
+        padding-bottom: 10px;
         ul{
             margin: 0 0;
             padding-left: 40px;
@@ -79,7 +83,7 @@ export default {
                     .content{
                         width: 70%;
                         p{
-                            font-size: 1.4em;
+                            font-size: 1.5em;
                             color:  #484848;
                             cursor: pointer;
                         }
@@ -101,8 +105,15 @@ export default {
                 }
             }
         }
-        .block{
-            text-align: center;
-        }
+    }
+    .tip{
+        height: calc(100vh - 71px);
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: gray;
+        cursor: default;
     }
 </style>

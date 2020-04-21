@@ -41,6 +41,7 @@ export default {
             this.$router.push({path: '/'});
         },
         toPublic(){
+            this.$router.push({path:'/myPublic'})
         },
         toRefuse(){
             this.$router.push({path:'/refuse'})

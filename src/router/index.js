@@ -6,6 +6,7 @@ import Login from '../views/Login'
 import Edit from '../views/Edit'
 import Refuse from '../views/Refuse'
 import Square from '../views/Square'
+import MyPublic from '../views/MyPublic'
 
 Vue.use(VueRouter)
 
@@ -42,6 +43,11 @@ const routes = [
     path: '/square',
     name: 'Square',
     component: Square
+  },
+  {
+    path: '/myPublic',
+    name: 'MyPublic',
+    component: MyPublic
   }
 ]
 
