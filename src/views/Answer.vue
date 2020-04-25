@@ -47,6 +47,7 @@ export default {
             projInfo: this.$route.query, // 回答的问卷信息
             questions: [], // 问题信息
             answers: [], // 答案信息
+            projectId: null,
         }
     },
     methods:{
@@ -59,9 +60,10 @@ export default {
                 data:{
                     author: self.projInfo.username, // 问卷发起者
                     projectName: self.projInfo.projectName, // 问卷名
+                    projectId: self.projectId, // 问卷id
                     questions: self.questions, // 问题
                     answer: self.answers, // 作答信息
-                    username: self.$store.state.userInfo.username // 作答者
+                    username: self.$store.state.userInfo.username, // 作答者
                 }
             }).then((res)=>{
                 // 提交成功
@@ -95,6 +97,7 @@ export default {
             }
         }).then((res)=>{
             self.questions = res.data.questions;
+            self.projectId = res.data.id;
             // 将多选题的答案类型初始化为数组
             for(let i=0;i<self.questions.length;i++){
                 if(self.questions[i].type == 'checkbox'){

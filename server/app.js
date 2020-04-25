@@ -14,7 +14,6 @@ app.all('*',function(req,res,next){
     res.header('X-Powered-By','3.2.1');
     res.header('Content-Type','application/json;charset=urf-8');
     next();
-    
 });
 
 // 创建连接池
@@ -172,6 +171,7 @@ app.post('/public',function(req,res){
                 // 通过id将问题的内容，格式和选项插入questions表
                 sql = 'insert into questions(projectId,title,type,answers) values(?,?,?,?)'
                 for(let i=0;i<questInfo.length;i++){
+                    console.log(questInfo[i]);
                     pool.query(sql,[id,questInfo[i].questTitle,questInfo[i].type,JSON.stringify(questInfo[i].answers)],(err,results)=>{
                         if(err){
                             console.log(err);
@@ -180,6 +180,7 @@ app.post('/public',function(req,res){
                                 status: 'error'
                             })
                         }else{
+                            console.log(i);
                         }
                     })
                 }
@@ -310,6 +311,7 @@ app.get('/getProject',function(req,res){
     .then(()=>{
         // 通过获取projectId在questions表中查询问题信息
         result = result[0];
+        let id = result.projectId;
         sql = 'select * from questions where projectId=?'
         pool.query(sql,[result.projectId],(err,results)=>{
             if(err){
@@ -328,7 +330,8 @@ app.get('/getProject',function(req,res){
             res.send({
                 code: 1,
                 statis: 'success',
-                questions: result
+                questions: result.reverse(),
+                id: id
             });
         })
     })
@@ -343,10 +346,9 @@ app.post('/submitAnswer',function(req,res){
         answerData = JSON.parse(data);
     })
     req.on('end',function(data){
-        console.log(answerData.answer);
-        sql = 'insert into answer(author,projectName,questTitle,answer,username) values(?,?,?,?,?)'
+        sql = 'insert into answer(author,projectName,questTitle,answer,username,projectId,type) values(?,?,?,?,?,?,?)'
         for(let i=0;i<answerData.questions.length;i++){
-            pool.query(sql,[answerData.author,answerData.projectName,answerData.questions[i].title,JSON.stringify(answerData.answer[i]),answerData.username],(err,results)=>{
+            pool.query(sql,[answerData.author,answerData.projectName,answerData.questions[i].title,JSON.stringify(answerData.answer[i]),answerData.username,answerData.projectId,answerData.questions[i].type],(err,results)=>{
                 if(err){
                     console.log(err);
                     res.send({
@@ -363,5 +365,111 @@ app.post('/submitAnswer',function(req,res){
     })
 })
 
+// 获取答案信息
+
+app.get('/getAnswer',function(req,res){
+    let id = req.query.projectId;
+    let sql = '';
+    let questInfo = '';
+    let answer = '';
+    // 查询问题列表和问题类型和选项
+    sql = 'select title,type,answers from questions where projectId=?'
+    pool.query(sql,[id],(err,results)=>{
+        if(err){
+            console.log(err);
+            res.send({
+                code: 0,
+                status: 'error'
+            })
+        }else{
+            // 查询答案
+            questInfo = toDataArr(results);
+            sql = 'select questTitle,answer,type from answer where projectId=?';
+            pool.query(sql,[id],(err,results)=>{
+                if(err){
+                    console.log(err);
+                    res.send({
+                        code: 0,
+                        status: 'error'
+                    })
+                }else{
+                    answer = toDataArr(results);
+                    for(let i=0;i<answer.length;i++){
+                        answer[i].answer = JSON.parse(answer[i].answer);
+                    }
+                    for(let i=0;i<questInfo.length;i++){
+                        questInfo[i].answers = JSON.parse(questInfo[i].answers);
+                    }
+                    // console.log(questInfo);
+                    // console.log(answer);
+                    // 统计选项的数量
+                    async function Count(){
+                        let result = [];
+                        let count = [];
+                        for(let i=0;i<questInfo.length;i++){{}
+                            // 计算单选结果
+                            if(questInfo[i].type == 'radio'){{}
+                                function calcCountRadio(){
+                                    return new Promise(function(resolve,reject){
+                                        let sql = 'select answer ,count(*) as count from answer where questTitle=? group by answer';
+                                        pool.query(sql,[questInfo[i].title],(err,results)=>{
+                                            if(err){
+                                                console.log(err)
+                                            }else{
+                                                result.push(toDataArr(results));
+                                                resolve(result);
+                                            }
+                                        })
+                                    })
+                                }
+                                count = await calcCountRadio();
+                                result = count;
+                            }
+                            // 计算多选结果
+                            else if(questInfo[i].type == 'checkbox'){
+                                function calcCountCheckbox(){
+                                    return new Promise(function(resolve,reject){
+                                        let sql = 'select answer ,count(*) as count from answer where questTitle=? group by answer';
+                                        pool.query(sql,[questInfo[i].title],(err,results)=>{
+                                            if(err){
+                                                console.log(err)
+                                            }else{
+                                                result.push(toDataArr(results));
+                                                resolve(result);
+                                            }
+                                        })
+                                    })
+                                }
+                                count = await calcCountCheckbox();
+                                result = count;
+                            }
+                            // 查询文字题结果
+                            else if(questInfo[i].type == 'text'){
+                                function calcText(){
+                                    return new Promise(function(resolve,reject){
+                                        let sql = 'select answer from answer where questTitle=?';
+                                        pool.query(sql,[questInfo[i].title],(err,results)=>{
+                                            result.push(toDataArr(results));
+                                            resolve(result)
+                                        })
+                                    })
+                                }
+                                count = await calcText();
+                                result = count;
+                            }
+                        }
+                        res.send({
+                            code: 1,
+                            status: 'success',
+                            answer: result,
+                            questInfo: questInfo
+                        })
+                    }
+                    Count();
+                }
+            })
+        }
+    })
+})
 
 app.listen(3000);

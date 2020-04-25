@@ -6,11 +6,16 @@ import store from './store'
 import axios from 'axios'
 import './plugins/element.js'
 import animated from 'animate.css'
+import echarts from 'echarts'
+import ECharts from 'vue-echarts/components/ECharts'
 
 // 使用Vuex
 Vue.use(Vuex);
 // 使用animated.css
 Vue.use(animated);
+// 使用echarts
+Vue.prototype.$echarts = echarts;
+Vue.component('chart', ECharts)
 
 //设置axios代理
 axios.defaults.baseURL = '/api';

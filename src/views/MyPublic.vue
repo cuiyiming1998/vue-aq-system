@@ -1,3 +1,4 @@
+// TODO: 删除问卷后刷新组件
 <template>
     <div>
         <header-com :active="2"></header-com>
@@ -14,7 +15,7 @@
                         </div>
                         <div class="btn">
                             <el-button type="danger" @click="deleteProj(item.projectName,index)" plain> 删除问卷 </el-button>
-                            <el-button @click="toAnalyse(item.projectName)"> 查看结果 </el-button>
+                            <el-button @click="toAnalyse(item.projectName,index)"> 查看结果 </el-button>
                         </div>
                     </div>
                 </li>
@@ -40,12 +41,12 @@ export default {
     },
     methods:{
         // 前往分析界面
-        toAnalyse: function(projectName){
+        toAnalyse: function(projectName,index){
             this.$router.push({
                 path:'/analyse',
                 query:{
-                    username: this.$store.state.userInfo.username,
-                    projectName: projectName
+                    projectName: projectName,
+                    projectId: this.projects[index].projectId
                 }
             })
         },

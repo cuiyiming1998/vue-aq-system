@@ -142,6 +142,7 @@ export default {
         publicQuest:function(){
             let self = this;
             let time = new Date();
+            console.log(self.questInfo);
             axios({
                 method: 'post',
                 url: '/public',
