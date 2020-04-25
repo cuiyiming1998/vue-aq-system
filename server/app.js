@@ -400,8 +400,6 @@ app.get('/getAnswer',function(req,res){
                     for(let i=0;i<questInfo.length;i++){
                         questInfo[i].answers = JSON.parse(questInfo[i].answers);
                     }
-                    // console.log(questInfo);
-                    // console.log(answer);
                     // 统计选项的数量
                     async function Count(){
                         let result = [];
@@ -411,8 +409,8 @@ app.get('/getAnswer',function(req,res){
                             if(questInfo[i].type == 'radio'){{}
                                 function calcCountRadio(){
                                     return new Promise(function(resolve,reject){
-                                        let sql = 'select answer ,count(*) as count from answer where questTitle=? group by answer';
-                                        pool.query(sql,[questInfo[i].title],(err,results)=>{
+                                        let sql = 'select answer ,count(*) as count from answer where projectId=? and questTitle=? group by answer';
+                                        pool.query(sql,[id,questInfo[i].title],(err,results)=>{
                                             if(err){
                                                 console.log(err)
                                             }else{
@@ -429,8 +427,8 @@ app.get('/getAnswer',function(req,res){
                             else if(questInfo[i].type == 'checkbox'){
                                 function calcCountCheckbox(){
                                     return new Promise(function(resolve,reject){
-                                        let sql = 'select answer ,count(*) as count from answer where questTitle=? group by answer';
-                                        pool.query(sql,[questInfo[i].title],(err,results)=>{
+                                        let sql = 'select answer ,count(*) as count from answer where projectId=? and questTitle=? group by answer';
+                                        pool.query(sql,[id,questInfo[i].title],(err,results)=>{
                                             if(err){
                                                 console.log(err)
                                             }else{
@@ -447,8 +445,8 @@ app.get('/getAnswer',function(req,res){
                             else if(questInfo[i].type == 'text'){
                                 function calcText(){
                                     return new Promise(function(resolve,reject){
-                                        let sql = 'select answer from answer where questTitle=?';
-                                        pool.query(sql,[questInfo[i].title],(err,results)=>{
+                                        let sql = 'select answer from answer where projectId=? and questTitle=?';
+                                        pool.query(sql,[id,questInfo[i].title],(err,results)=>{
                                             result.push(toDataArr(results));
                                             resolve(result)
                                         })

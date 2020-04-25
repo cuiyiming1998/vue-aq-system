@@ -2,13 +2,39 @@
     <div class="container">
         <header-com :active="2"></header-com>
         <div class="main">
-            <h1> {{projInfo.projectName}} 的调查结果</h1>
+            <div class="title">
+                <h1> {{projInfo.projectName}} 的调查结果</h1>
+            </div>
             <ul>
                 <li v-for="(item,index) in questInfo" :key=index>
                     <h2>
+                        <span>
+                            {{index+1}}.
+                        </span>
                         {{item.title}}
                     </h2>
-                    <chart :options="options[index]" :auto-resize="true"></chart>
+                    <div v-if="item.type != 'text' " class="stats">
+                            <div class="empty" v-if="answers[index].length == 0">
+                                <p>
+                                    暂时还没有人回答这道题，快将问卷分享给朋友吧！
+                                </p>
+                            </div>
+                        <div v-for="(i,k) in answers[index]" :key=k class="percent">
+                            <span>{{i.answer}}</span>
+                            <span>{{i.count}}人</span>
+                            <el-progress :percentage="percentage(i.count,index)" class="bar" ></el-progress>
+                        </div>
+                    </div>
+                    <div v-else>
+                        <div class="empty" v-if="answers[index].length == 0">
+                            <p>
+                                暂时还没有人回答这道题，快将问卷分享给朋友吧！
+                            </p>
+                        </div>
+                        <el-tag v-for="(i,k) in answers[index]" class="tags" :key=k>
+                            {{i.answer}}
+                        </el-tag>
+                    </div>
                 </li>
             </ul>
         </div>
@@ -25,23 +51,26 @@ export default {
     data(){
         return {
             projInfo: this.$route.query,
-            questInfo: [],
-            options: [], // echarts数据
+            questInfo: [],  // 问题信息
+            answers: [],  // 答案信息
         }
     },
     components:{
         headerCom
     },
     computed:{
-        questions:function(){
-            return this.questInfo
-        }
     },
     methods:{
+        percentage(num,index){
+            let sum = 0;
+            for(let i=0;i<this.answers[index].length;i++){
+                sum += this.answers[index][i].count;
+            }
+            let per = ((num/sum)*100).toFixed(2);
+            return parseFloat(per);
+        }
     },
     created(){
-    },
-    mounted(){
         let self = this;
         axios({
             method: 'get',
@@ -51,6 +80,7 @@ export default {
             }
         }).then((res)=>{
             if(res.data.code == 1){
+                // 初始化数据
                 let answer = res.data.answer;
                 let questions = res.data.questInfo;
                 for(let i=0;i<answer.length;i++){
@@ -59,41 +89,24 @@ export default {
                     }
                 }
                 self.questInfo = questions;
+                self.answers = answer;
                 return answer;
             }
         }).then((answer)=>{
-            console.log(answer);
-            console.log(answer[0])
-            console.log(self.questInfo);
-            let counts = []; //保存答案统计信息
             let questions = self.questInfo; // 问题信息
-            // 初始化Echarts
-            for(let i=0;i<questions.length;i++){
-                if(questions[i].type == 'radio' || questions[i].type == 'checkbox'){
-                console.log(answer[i])
-                    let value = [];
-                    for(let j=0;i<answer[i].length;j++){
-                        // console.log(answer[i][j])
-                        // value.push(answer[i][j].count);
-                    }
-                    console.log(value);
-                    self.options.push({
-                        xAxis: {
-                            type: 'category',
-                            data: questions[i].answers
-                        },
-                        yAxis: {
-                            type: 'value'
-                        },
-                        series: [{
-                            data: value,
-                            type: 'bar',
-                            smooth: true
-                        }]
-                    })
+            let checkboxData = [];
+            console.log(answer);
+            // 拼接多选题信息
+            for(let i=0;i<answer.length;i++){
+                for(let j=0;j<answer[i].length;j++){
+                    if(typeof(answer[i][j].answer) === "object"){
+                        answer[i][j].answer = answer[i][j].answer.join('+');
+                    };
                 }
             }
         })
+    },
+    mounted(){
     }
 }
 </script>
@@ -105,13 +118,57 @@ export default {
             margin: 40px auto 0 auto;
             background-color: white;
             padding: 20px;
-            h1{
-                text-align: center;
-                margin: 0;
+            .title{
+                width: 80%;
+                margin: 0 auto;
+                padding-bottom: 20px;
+                border-bottom: 3px solid skyblue;
+                h1{
+                    text-align: center;
+                    margin: 0;
+                }
             }
             ul li{
                 list-style: none;
+                padding: 10px 0;
+                .stats{
+                    width: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    .percent{
+                        width: 100%;
+                        height: 30px !important;
+                        line-height: 30px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        span{
+                            text-align: center;
+                            flex: 1;
+                        }
+                        .bar{
+                            flex: 4;
+                        }
+                    }
+                }
             }
+        }
+        .tags{
+            margin: 10px 5px;
+            cursor: default;
+            transition: all .2s;
+        }
+        .tags:hover{
+            background-color: #409eff;
+            color: #fff;
+        }
+        .empty{
+            width: 100%;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #aaa;
         }
     }
 </style>

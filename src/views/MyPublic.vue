@@ -71,6 +71,10 @@ export default {
                     if(self.projects.length == 0){
                         self.isPublic = false;
                     }
+                    self.$message({
+                        message: '删除成功！',
+                        type: 'success'
+                    })
                 })
             })
         }
