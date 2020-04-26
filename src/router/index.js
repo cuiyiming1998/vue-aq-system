@@ -72,7 +72,6 @@ const router = new VueRouter({
 router.beforeEach((to,from,next)=>{
   // 判断是否需要登录
   if(to.matched.some(res=>res.meta.requireLogin)){
-    //设置1ms延迟，等待本地存储用户信息
     let waitTime = window.setTimeout(()=>{
       if(window.localStorage.getItem('userInfo')){
         next()

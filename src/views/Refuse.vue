@@ -82,26 +82,29 @@ export default {
             margin: 20px auto;
             table{
                 width: 100%;
-                display: table;
+                display: flex;
+                flex-direction: column;
                 border-spacing: 2px;
                 border-color: grey;
                 thead{
-                    display: table-row;
+                    display: flex;
                     height: 50px;
                     line-height: 50px;
                     tr{
-                        display: table-cell;
+                        flex: 1;
                     }
                 }
                 tbody{
-                    display: table-row;
+                    display: flex;
                     .name{
+                        flex: 1;
                         color: #018FE5;
                         text-decoration: underline;
                         font-size: 1.2rem;
                         cursor: default;
                     }
                     tr{
+                        flex: 1;
                         height: 50px;
                         line-height: 50px;
                         display: table-cell;

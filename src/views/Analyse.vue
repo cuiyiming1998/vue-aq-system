@@ -31,9 +31,11 @@
                                 暂时还没有人回答这道题，快将问卷分享给朋友吧！
                             </p>
                         </div>
-                        <el-tag v-for="(i,k) in answers[index]" class="tags" :key=k>
-                            {{i.answer}}
-                        </el-tag>
+                            <span  v-for="(i,k) in answers[index]" :key=k>
+                                <el-tag  v-if="i.answer != '' " class="tags">
+                                        {{i.answer}}
+                                </el-tag>
+                            </span>
                     </div>
                 </li>
             </ul>
@@ -66,8 +68,11 @@ export default {
             for(let i=0;i<this.answers[index].length;i++){
                 sum += this.answers[index][i].count;
             }
-            let per = ((num/sum)*100).toFixed(2);
+            let per = ((num/sum)*100).toFixed(1);
             return parseFloat(per);
+        },
+        showAns(index,k){
+            console.log(this.answers[index][k]);
         }
     },
     created(){
