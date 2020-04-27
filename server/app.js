@@ -93,6 +93,38 @@ app.post('/login',function(req,res){
     })
 })
 
+// 被禁用用户禁止登录
+app.post('/loginAccess',function(req,res){
+    let id = '';
+    let sql = 'select access from user where userId=?'
+    req.on('data',function(data){
+        id = JSON.parse(data).username.userId;
+    })
+    req.on('end',function(){
+        pool.query(sql,[id],(err,results)=>{
+            if(err){
+                res.send({
+                    code: 0,
+                    status: 'error'
+                })
+            }else{
+                let result = toDataArr(results)[0].access;
+                if(result == 'enable'){
+                    res.send({
+                        code: 1,
+                        status: 'success'
+                    })
+                }else{
+                    res.send({
+                        code: 2,
+                        status: 'disabled'
+                    })
+                }
+            }
+        })
+    })
+})
+
 // 注册验证
 app.post('/signup',function(req,res){
     let signData = '';

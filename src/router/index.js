@@ -9,6 +9,7 @@ import Square from '../views/Square'
 import MyPublic from '../views/MyPublic'
 import Analyse from '../views/Analyse'
 import Answer from '../views/Answer'
+import axios from 'axios'
 
 Vue.use(VueRouter)
 
@@ -74,7 +75,19 @@ router.beforeEach((to,from,next)=>{
   if(to.matched.some(res=>res.meta.requireLogin)){
     let waitTime = window.setTimeout(()=>{
       if(window.localStorage.getItem('userInfo')){
-        next()
+        axios({
+          method: 'post',
+          url: '/loginAccess',
+          data:{
+            username: JSON.parse(window.localStorage.getItem('userInfo'))
+          }
+        }).then((res)=>{
+          if(res.data.code == 1){
+            next()
+          }else{
+            next({path:'/login'})
+          }
+        })
       }else{
         next({path:'/login'})
       }
