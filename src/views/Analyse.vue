@@ -40,11 +40,13 @@
                 </li>
             </ul>
         </div>
+        <footer-com></footer-com>
     </div>
 </template>
 
 <script>
 import headerCom from '../components/Header'
+import footerCom from '../components/footerCom.vue'
 import axios from 'axios'
 import echarts from 'echarts'
 import 'echarts/lib/chart/bar'
@@ -58,7 +60,8 @@ export default {
         }
     },
     components:{
-        headerCom
+        headerCom,
+        footerCom
     },
     computed:{
     },
@@ -100,7 +103,6 @@ export default {
         }).then((answer)=>{
             let questions = self.questInfo; // 问题信息
             let checkboxData = [];
-            console.log(answer);
             // 拼接多选题信息
             for(let i=0;i<answer.length;i++){
                 for(let j=0;j<answer[i].length;j++){

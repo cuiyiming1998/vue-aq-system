@@ -29,12 +29,14 @@
                 </el-pagination>
             </div>
         </div>
+        <footer-com></footer-com>
     </div>
 </template>
 
 <script>
 import axios from 'axios'
 import headerCom from '../components/Header'
+import footerCom from '../components/footerCom.vue'
 
 export default {
     data(){
@@ -54,7 +56,8 @@ export default {
         }
     },
     components:{
-        headerCom
+        headerCom,
+        footerCom
     },
     beforeMount(){
         const self = this;

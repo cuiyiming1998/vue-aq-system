@@ -31,7 +31,7 @@ export default {
 
 <style lang="scss" scoped>
     .el-main{
-        height: 90vh;
+        height: calc(100vh - 71px - 160px);
         width: 100vw;
         display: flex;
         justify-content: center;

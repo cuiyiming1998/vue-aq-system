@@ -25,11 +25,13 @@
             <h1>您还没有发布过项目哦</h1>
             <h2>快去创建并发布吧</h2>
         </div>
+        <footer-com></footer-com>
     </div>
 </template>
 
 <script>
 import headerCom from '../components/Header'
+import footerCom from '../components/footerCom.vue'
 import axios from 'axios'
 
 export default {
@@ -76,11 +78,14 @@ export default {
                         type: 'success'
                     })
                 })
+            }).catch(()=>{
+                
             })
         }
     },
     components:{
-        headerCom
+        headerCom,
+        footerCom
     },
     beforeCreate(){
         let self = this;

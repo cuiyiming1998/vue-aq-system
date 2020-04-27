@@ -71,12 +71,18 @@ app.post('/login',function(req,res){
                     status: 'error'
                 })
             }else if(results[0].password == loginData.password){
-                // 判断密码是否相等
-                res.send({
-                    data: results[0],
-                    code: 0,
-                    status: 'success'
-                })
+                if(results[0].access == 'disabled'){ // 判断是否用户被禁用
+                    res.send({
+                        code: 2,
+                        status: 'error'
+                    })
+                }else{
+                    res.send({
+                        data: results[0],
+                        code: 0,
+                        status: 'success'
+                    })
+                }
             }else{
                 res.send({
                     code: 1,

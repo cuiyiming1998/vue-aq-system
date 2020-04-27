@@ -63,7 +63,12 @@ export default {
                                 message: '登录成功！'
                             })
                             self.$store.commit('setUserInfo',res.data.data);
-                        }else{
+                        }else if(res.data.code == 2){
+                            self.$message.error('该账号已被禁用！');
+                            self.form.name = '';
+                            self.form.password = '';
+                        }
+                        else{
                             self.$message.error('用户名或密码不正确！');
                             self.form.name = '';
                             self.form.password = '';

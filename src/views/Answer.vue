@@ -34,12 +34,14 @@
                 <el-button class="answer" type="primary" @click="submit">提交问卷</el-button>
             </div>
         </div>
+        <footer-com></footer-com>
     </div>
 </template>
 
 <script>
 import axios from 'axios'
 import headerCom from '../components/Header'
+import footerCom from '../components/footerCom.vue'
 
 export default {
     data(){
@@ -84,7 +86,8 @@ export default {
         },
     },
     components:{
-        headerCom
+        headerCom,
+        footerCom
     },
     beforeMount(){
         let self = this;

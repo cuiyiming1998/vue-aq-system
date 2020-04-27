@@ -18,11 +18,13 @@
                 </tbody>
             </table>
         </div>
+        <footer-com></footer-com>
     </div>
 </template>
 
 <script>
 import headerCom from '../components/Header'
+import footerCom from '../components/footerCom.vue'
 import store from '@/store'
 import { mapState } from 'vuex'
 
@@ -69,6 +71,7 @@ export default {
     },
     components:{
         headerCom,
+        footerCom
     }
 }
 </script>

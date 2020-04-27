@@ -43,11 +43,13 @@
                 </div>
             </div>
         </div>
+        <footer-com></footer-com>
     </div>
 </template>
 
 <script>
 import headerCom from '../components/Header'
+import footerCom from '../components/footerCom.vue'
 import axios from 'axios'
 
 export default {
@@ -62,6 +64,7 @@ export default {
     },
     components:{
         headerCom,
+        footerCom
     },
     methods:{
         showOpts: function(){
@@ -142,7 +145,6 @@ export default {
         publicQuest:function(){
             let self = this;
             let time = new Date();
-            console.log(self.questInfo);
             axios({
                 method: 'post',
                 url: '/public',

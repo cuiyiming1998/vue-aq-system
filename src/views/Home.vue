@@ -3,6 +3,7 @@
       <header-com :active="1"></header-com>
       <new-project v-if="isSaved == false"></new-project>
       <projects v-else></projects>
+      <footer-com></footer-com>
   </div>
 </template>
 
@@ -11,6 +12,7 @@ import store from '@/store'
 import headerCom from '../components/Header'
 import newProject from '../components/NewProject'
 import projects from '../components/Projects'
+import footerCom from '../components/footerCom.vue'
 
 export default {
   store,
@@ -25,7 +27,8 @@ export default {
   components:{
     headerCom,
     newProject,
-    projects
+    projects,
+    footerCom
   },
   beforeMount: function(){
     this.$store.commit('fresh');
