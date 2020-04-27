@@ -177,7 +177,6 @@ app.post('/public',function(req,res){
                 // 通过id将问题的内容，格式和选项插入questions表
                 sql = 'insert into questions(projectId,title,type,answers) values(?,?,?,?)'
                 for(let i=0;i<questInfo.length;i++){
-                    console.log(questInfo[i]);
                     pool.query(sql,[id,questInfo[i].questTitle,questInfo[i].type,JSON.stringify(questInfo[i].answers)],(err,results)=>{
                         if(err){
                             console.log(err);
@@ -186,7 +185,6 @@ app.post('/public',function(req,res){
                                 status: 'error'
                             })
                         }else{
-                            console.log(i);
                         }
                     })
                 }
