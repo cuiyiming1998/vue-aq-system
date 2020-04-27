@@ -71,7 +71,7 @@ app.post('/login',function(req,res){
                     status: 'error'
                 })
             }else if(results[0].password == loginData.password){
-                if(results[0].access == 'disabled'){ // 判断是否用户被禁用
+                if(results[0].access == 'disable'){ // 判断是否用户被禁用
                     res.send({
                         code: 2,
                         status: 'error'
@@ -105,8 +105,8 @@ app.post('/signup',function(req,res){
             let result = toDataArr(results);
             // 注册的用户名不重复
             if(result.length == 0){
-                let insertSql = 'insert into user(username,password,email) values(?,?,?)'
-                pool.query(insertSql,[signData.username,signData.password,signData.email],(err,results)=>{
+                let insertSql = 'insert into user(username,password,email,access,time) values(?,?,?,?,?)'
+                pool.query(insertSql,[signData.username,signData.password,signData.email,'enable',signData.time],(err,results)=>{
                     if(err){
                         console.log(err);
                     }else{

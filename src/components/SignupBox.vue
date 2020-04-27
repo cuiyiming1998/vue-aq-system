@@ -66,13 +66,15 @@ export default {
         // 注册时发送数据
         signUpPost: function(){
             const self = this;
+            let time = new Date();
             axios({
                 method: 'post',
                 url: '/signup',
                 data: {
                     username: self.form.username,
                     password: self.form.password,
-                    email: self.form.email
+                    email: self.form.email,
+                    time: time.toLocaleDateString()
                 }
             }).then(function(res){
                 if(res.data.code == 1){
