@@ -124,7 +124,6 @@ export default {
                     type: 'success'
                 });
                 this.isSaved = true;
-                console.log(this.isSaved)
                 this.$router.go(-1);
             }
             else{
