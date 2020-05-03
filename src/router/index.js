@@ -10,6 +10,7 @@ import MyPublic from '../views/MyPublic'
 import Analyse from '../views/Analyse'
 import Answer from '../views/Answer'
 import axios from 'axios'
+import store from '../store'
 
 Vue.use(VueRouter)
 
@@ -35,7 +36,7 @@ const routes = [
   {
     path:'/edit',
     name: 'Edit',
-    component: Edit
+    component: Edit,
   },
   {
     path: '/refuse',

@@ -15,6 +15,7 @@ export default {
 </script>
 
 <style lang="scss">
+* { touch-action: pan-y; }
 html,body,#app {
   min-height: 100%;
   padding: 0;

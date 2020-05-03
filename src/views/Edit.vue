@@ -22,6 +22,7 @@
                             </div>
                             <textarea name="textAns" id="textQuest" cols="20" rows="5" v-if="questInfo[index].type == 'text'"></textarea>
                             <el-row class="questBtns">
+                                <el-button v-if="questInfo[index].type != 'text' " type="primary" class="delBtn" @click="addOptions(index)" icon="el-icon-plus" circle></el-button>
                                 <el-button type="primary" class="delBtn" @click="removeQuest(index)" icon="el-icon-delete" circle></el-button>
                             </el-row>
                         </li>
@@ -60,6 +61,7 @@ export default {
             questInfo: [],
             checked: null,
             showOpt: false,
+            isSaved: false // 用户是否保存
         }
     },
     components:{
@@ -95,6 +97,10 @@ export default {
                 })
             }
         },
+        // 添加选项
+        addOptions:function(i){
+            this.questInfo[i].answers.push('选项'+(this.questInfo[i].answers.length+1));
+        },
         // 删除题目
         removeQuest:function(i){
             this.questInfo.splice(i,1);
@@ -117,6 +123,8 @@ export default {
                     message: '恭喜！保存成功！',
                     type: 'success'
                 });
+                this.isSaved = true;
+                console.log(this.isSaved)
                 this.$router.go(-1);
             }
             else{
@@ -137,6 +145,7 @@ export default {
                         message: '恭喜！保存成功！',
                         type: 'success'
                     })
+                    this.isSaved = true;
                     this.$router.go(-1);
                 }
             }
@@ -179,15 +188,35 @@ export default {
                         type: 'success',
                         message: "发布成功！您可以到 '我的发布' 中查看你发布的问卷信息",
                     })
-                    self.$router.push({path: '/'})
+                    self.isSaved = true;
+                    self.$router.push({path: '/'});
                 }
             })
         }
+    },
+    beforeCreate(){
     },
     beforeMount:function(){
         if(this.$route.params.id >= 0){
             this.projectName = this.$store.state.projects[this.$route.params.id];
             this.questInfo = JSON.parse(window.localStorage.getItem(this.projectName));
+        }
+    },
+    // 未保存询问是否即系退出
+    beforeRouteLeave (to, from, next) {
+        const tip = '当前页面未保存，是否继续退出？'
+        if(this.isSaved == false){
+            this.$confirm(tip,'提示',{
+            confirmButtonText: '是',
+            cancelButtonText:'取消',
+            type: 'warning'
+            }).then(()=>{
+                next();
+            }).catch(()=>{
+                next(false);
+            })
+        }else{
+            next();
         }
     }
 }
