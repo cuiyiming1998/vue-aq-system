@@ -2,43 +2,48 @@
     <div class="container">
         <header-com :active="2"></header-com>
         <div class="main">
-            <div class="title">
-                <h1> {{projInfo.projectName}} 的调查结果</h1>
-            </div>
-            <ul>
-                <li v-for="(item,index) in questInfo" :key=index>
-                    <h2>
-                        <span>
-                            {{index+1}}.
-                        </span>
-                        {{item.title}}
-                    </h2>
-                    <div v-if="item.type != 'text' " class="stats">
+            <div class="questions" id="questions">
+                <div class="title">
+                    <h1> {{projInfo.projectName}} 的调查结果</h1>
+                </div>
+                <ul>
+                    <li v-for="(item,index) in questInfo" :key=index>
+                        <h2>
+                            <span>
+                                {{index+1}}.
+                            </span>
+                            {{item.title}}
+                        </h2>
+                        <div v-if="item.type != 'text' " class="stats">
+                                <div class="empty" v-if="answers[index].length == 0">
+                                    <p>
+                                        暂时还没有人回答这道题，快将问卷分享给朋友吧！
+                                    </p>
+                                </div>
+                            <div v-for="(i,k) in answers[index]" :key=k class="percent">
+                                <span>{{i.answer}}</span>
+                                <span>{{i.count}}人</span>
+                                <el-progress :percentage="percentage(i.count,index)" class="bar" ></el-progress>
+                            </div>
+                        </div>
+                        <div v-else>
                             <div class="empty" v-if="answers[index].length == 0">
                                 <p>
                                     暂时还没有人回答这道题，快将问卷分享给朋友吧！
                                 </p>
                             </div>
-                        <div v-for="(i,k) in answers[index]" :key=k class="percent">
-                            <span>{{i.answer}}</span>
-                            <span>{{i.count}}人</span>
-                            <el-progress :percentage="percentage(i.count,index)" class="bar" ></el-progress>
+                                <span  v-for="(i,k) in answers[index]" :key=k>
+                                    <el-tag  v-if="i.answer != '' " class="tags">
+                                            {{i.answer}}
+                                    </el-tag>
+                                </span>
                         </div>
-                    </div>
-                    <div v-else>
-                        <div class="empty" v-if="answers[index].length == 0">
-                            <p>
-                                暂时还没有人回答这道题，快将问卷分享给朋友吧！
-                            </p>
-                        </div>
-                            <span  v-for="(i,k) in answers[index]" :key=k>
-                                <el-tag  v-if="i.answer != '' " class="tags">
-                                        {{i.answer}}
-                                </el-tag>
-                            </span>
-                    </div>
-                </li>
-            </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="save-to-pdf">
+                <el-button type='success' @click="getPdf('questions',projInfo.projectName + '的调查结果')">将此问卷的结果保存到本地</el-button>
+            </div>
         </div>
         <footer-com></footer-com>
     </div>
@@ -176,6 +181,12 @@ export default {
             justify-content: center;
             align-items: center;
             color: #aaa;
+        }
+        .save-to-pdf{
+            width: 100%;
+            height: 60px;
+            line-height: 60px;
+            text-align: center;
         }
     }
 </style>

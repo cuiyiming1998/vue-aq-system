@@ -3,31 +3,34 @@
         <header-com :active="1"></header-com>
         <div class="edit">
             <div class="editor">
-                <div class="header">
-                    <input type="text" class="title" placeholder="问卷题目" v-model="projectName">
-                </div>
-                <div class="main">
-                    <ul class="questList" v-if="questInfo.length != 0">
-                        <li v-for="(item,index) in questInfo" :key=index>
-                            <div class="title">
-                                <span>{{index+1}}.</span>
-                                <input class="questTitle" type="text" placeholder="请输入题目名称" v-model="questInfo[index].questTitle">
-                            </div>
-                            <div class="answer">
-                                <div v-for="(i,k) in item.answers" :key = k class="answer-container">
-                                    <input type="radio" disabled v-if="questInfo[index].type == 'radio'">
-                                    <input type="checkbox" disabled v-if="questInfo[index].type == 'checkbox'">
-                                    <input class="answers" type="text" v-model="questInfo[index].answers[k]">
-                                    <i class="el-icon-delete delete-item" @click="deleteOptions(index,k)"></i>
+                <!-- 保存至PDF的部分 -->
+                <div class="questions" id="questions">
+                    <div class="header">
+                        <input type="text" class="title" placeholder="问卷题目" v-model="projectName">
+                    </div>
+                    <div class="main">
+                        <ul class="questList" v-if="questInfo.length != 0">
+                            <li v-for="(item,index) in questInfo" :key=index class="quests">
+                                <div class="title">
+                                    <span>{{index+1}}.</span>
+                                    <input class="questTitle" type="text" placeholder="请输入题目名称" v-model="questInfo[index].questTitle">
                                 </div>
-                            </div>
-                            <textarea name="textAns" id="textQuest" cols="20" rows="5" v-if="questInfo[index].type == 'text'"></textarea>
-                            <el-row class="questBtns">
-                                <el-button v-if="questInfo[index].type != 'text' " type="primary" class="delBtn" @click="addOptions(index)" icon="el-icon-plus" circle></el-button>
-                                <el-button type="primary" class="delBtn" @click="removeQuest(index)" icon="el-icon-delete" circle></el-button>
-                            </el-row>
-                        </li>
-                    </ul>
+                                <div class="answer">
+                                    <div v-for="(i,k) in item.answers" :key = k class="answer-container">
+                                        <input type="radio" disabled v-if="questInfo[index].type == 'radio'">
+                                        <input type="checkbox" disabled v-if="questInfo[index].type == 'checkbox'">
+                                        <input class="answers" type="text" v-model="questInfo[index].answers[k]">
+                                        <i class="el-icon-delete delete-item" @click="deleteOptions(index,k)"></i>
+                                    </div>
+                                </div>
+                                <textarea name="textAns" id="textQuest" cols="20" rows="5" v-if="questInfo[index].type == 'text'"></textarea>
+                                <el-row class="questBtns">
+                                    <el-button v-if="questInfo[index].type != 'text' " type="primary" class="delBtn" @click="addOptions(index)" icon="el-icon-plus" circle></el-button>
+                                    <el-button type="primary" class="delBtn" @click="removeQuest(index)" icon="el-icon-delete" circle></el-button>
+                                </el-row>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="footer" @click="changeOpts">
                     <div v-if="showOpt">
@@ -40,6 +43,7 @@
                     </div>
                 </div>
                 <div class="btns">
+                    <el-button @click="getPdf('questions',projectName)">将问卷另存为PDF</el-button>
                     <el-button class="btn" @click="saveQuest">保存问卷</el-button>
                     <el-button type="primary" class="btn publicBtn" @click="publicQuest">发布问卷</el-button>
                 </div>
@@ -62,7 +66,9 @@ export default {
             questInfo: [],
             checked: null,
             showOpt: false,
-            isSaved: false // 用户是否保存
+            isSaved: false, // 用户是否保存
+            projectNameCopy : '',
+            questInfoCopy: [],  //判断用户是否编辑
         }
     },
     components:{
@@ -210,13 +216,19 @@ export default {
     beforeMount:function(){
         if(this.$route.params.id >= 0){
             this.projectName = this.$store.state.projects[this.$route.params.id];
+            this.projectNameCopy = this.projectName;
             this.questInfo = JSON.parse(window.localStorage.getItem(this.projectName));
+            this.questInfoCopy = this.questInfo;
         }
     },
-    // 未保存询问是否即系退出
+    // 未保存询问是否立即退出
     beforeRouteLeave (to, from, next) {
         const tip = '当前页面未保存，是否继续退出？'
-        if(this.isSaved == false){
+        // 如果无编辑，直接返回
+        if(this.projectNameCopy == this.projectName && this.questInfoCopy == this.questInfo){
+            next();
+        }else if(this.isSaved == false){
+            // 未保存，询问
             this.$confirm(tip,'提示',{
             confirmButtonText: '是',
             cancelButtonText:'取消',
@@ -293,6 +305,14 @@ export default {
                         display: flex;
                         padding-right: 20px;
                         justify-content: flex-end;
+                        .delBtn{
+                            visibility: hidden;
+                        }
+                    }
+                    .quests:hover{
+                        .delBtn{
+                            visibility: inherit;
+                        }
                     }
                 }
                 .answer{

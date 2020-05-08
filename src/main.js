@@ -8,6 +8,7 @@ import './plugins/element.js'
 import animated from 'animate.css'
 import echarts from 'echarts'
 import ECharts from 'vue-echarts/components/ECharts'
+import htmlToPdf from '@/utils/htmlToPdf.js'
 
 // 使用Vuex
 Vue.use(Vuex);
@@ -16,6 +17,8 @@ Vue.use(animated);
 // 使用echarts
 Vue.prototype.$echarts = echarts;
 Vue.component('chart', ECharts)
+// 使用htmltopdf
+Vue.use(htmlToPdf)
 
 //设置axios代理
 axios.defaults.baseURL = '/api';
