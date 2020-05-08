@@ -14,10 +14,11 @@
                                 <input class="questTitle" type="text" placeholder="请输入题目名称" v-model="questInfo[index].questTitle">
                             </div>
                             <div class="answer">
-                                <div v-for="(i,k) in item.answers" :key = k>
-                                    <input type="radio" disabled v-if="questInfo[index].type == 'radio'"> 
-                                    <input type="checkbox" disabled v-if="questInfo[index].type == 'checkbox'"> 
+                                <div v-for="(i,k) in item.answers" :key = k class="answer-container">
+                                    <input type="radio" disabled v-if="questInfo[index].type == 'radio'">
+                                    <input type="checkbox" disabled v-if="questInfo[index].type == 'checkbox'">
                                     <input class="answers" type="text" v-model="questInfo[index].answers[k]">
+                                    <i class="el-icon-delete delete-item" @click="deleteOptions(index,k)"></i>
                                 </div>
                             </div>
                             <textarea name="textAns" id="textQuest" cols="20" rows="5" v-if="questInfo[index].type == 'text'"></textarea>
@@ -100,6 +101,17 @@ export default {
         // 添加选项
         addOptions:function(i){
             this.questInfo[i].answers.push('选项'+(this.questInfo[i].answers.length+1));
+        },
+        // 删除选项
+        deleteOptions: function(i,k){
+            if(this.questInfo[i].answers.length > 2){
+                this.questInfo[i].answers.splice(k,1);
+            }else{
+                this.$message({
+                    message: '请至少提供两个选项！',
+                    type: 'warning'
+                })
+            }
         },
         // 删除题目
         removeQuest:function(i){
@@ -291,6 +303,16 @@ export default {
                         line-height: 40px;
                         font-size: 1rem;
                         width: 90%;
+                    }
+                    .answer-container:hover{
+                        .delete-item{
+                            visibility: inherit;
+                        }
+                    }
+                    .delete-item{
+                        visibility: hidden;
+                        color: red;
+                        cursor: pointer;
                     }
                 }
             }
